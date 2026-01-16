@@ -29,12 +29,14 @@ export function Navbar() {
     <header className="bg-card/95 backdrop-blur-md border-b border-border">
       <nav className="container mx-auto px-4 h-20 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-saffron flex items-center justify-center">
-            <span className="text-primary-foreground font-serif font-bold text-xl">S</span>
-          </div>
-          <span className="font-serif text-2xl font-semibold text-foreground">
-            Saffron<span className="text-primary">Gold</span>
+        <Link href="/" className="flex items-center gap-3">
+          <img
+            src="/logo.png"
+            alt="Chakra Biotech Logo"
+            className="w-10 h-10 object-contain"
+          />
+          <span className="font-serif text-xl md:text-2xl font-semibold text-foreground">
+            Chakra <span className="text-primary">Biotech</span>
           </span>
         </Link>
 
@@ -45,9 +47,7 @@ export function Navbar() {
               key={link.path}
               href={link.path}
               className={`relative font-medium transition-colors hover:text-primary ${
-                pathname === link.path
-                  ? "text-primary"
-                  : "text-foreground"
+                pathname === link.path ? "text-primary" : "text-foreground"
               }`}
             >
               {link.name}
@@ -102,9 +102,7 @@ export function Navbar() {
                   href={link.path}
                   onClick={() => setIsOpen(false)}
                   className={`block py-2 font-medium transition-colors hover:text-primary ${
-                    pathname === link.path
-                      ? "text-primary"
-                      : "text-foreground"
+                    pathname === link.path ? "text-primary" : "text-foreground"
                   }`}
                 >
                   {link.name}
@@ -112,7 +110,11 @@ export function Navbar() {
               ))}
               <div className="flex gap-3 pt-4">
                 <Button variant="outline" size="sm" className="flex-1" asChild>
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Phone className="w-4 h-4 mr-2" />
                     WhatsApp
                   </a>
