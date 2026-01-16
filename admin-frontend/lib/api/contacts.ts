@@ -12,8 +12,8 @@ export interface ContactSubmission {
   adminNotes?: string;
   ipAddress?: string;
   userAgent?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ContactsResponse {

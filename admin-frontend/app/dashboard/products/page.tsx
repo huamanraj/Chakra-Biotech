@@ -1,236 +1,261 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import DashboardLayout from '../../components/DashboardLayout'
-import Modal from '../../components/Modal'
-import { Plus, Edit, Trash2, Eye, Search, Star, Package, Upload, X } from 'lucide-react'
-import toast from 'react-hot-toast'
-import { productsApi, productCategoriesApi, uploadApi, Product, Category } from '@/lib/api'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import DashboardLayout from "../../components/DashboardLayout";
+import Modal from "../../components/Modal";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Search,
+  Star,
+  Package,
+  Upload,
+  X,
+} from "lucide-react";
+import toast from "react-hot-toast";
+import {
+  productsApi,
+  productCategoriesApi,
+  uploadApi,
+  Product,
+  Category,
+} from "@/lib/api";
 
 const ProductsManagement = () => {
-  const [products, setProducts] = useState<Product[]>([])
-  const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [showForm, setShowForm] = useState(false)
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const [submitting, setSubmitting] = useState(false)
-  const [uploading, setUploading] = useState(false)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [showForm, setShowForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    shortDescription: '',
-    category: '',
+    name: "",
+    description: "",
+    shortDescription: "",
+    category: "",
     price: 0,
     originalPrice: 0,
-    grade: '',
-    origin: '',
-    weight: '',
+    grade: "",
+    origin: "",
+    weight: "",
     images: [] as string[],
     features: [] as string[],
     benefits: [] as string[],
     inStock: true,
     stockQuantity: 0,
-    badge: '',
+    badge: "",
     isPublished: false,
     isFeatured: false,
     displayOrder: 0,
     specifications: {
-      origin: '',
-      grade: '',
-      moistureContent: '',
-      crocin: '',
-      safranal: '',
-      picrocrocin: '',
-      shelfLife: '',
-      storage: ''
-    }
-  })
+      origin: "",
+      grade: "",
+      moistureContent: "",
+      crocin: "",
+      safranal: "",
+      picrocrocin: "",
+      shelfLife: "",
+      storage: "",
+    },
+  });
 
   useEffect(() => {
-    loadData()
-  }, [])
+    loadData();
+  }, []);
 
   const loadData = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const [productsRes, categoriesRes] = await Promise.all([
         productsApi.getAll({ page: 1, limit: 100 }),
-        productCategoriesApi.getAll()
-      ])
-      setProducts(productsRes.data.products)
-      setCategories(categoriesRes.data)
+        productCategoriesApi.getAll(),
+      ]);
+      setProducts(productsRes.data.products);
+      setCategories(categoriesRes.data);
     } catch (error) {
-      toast.error('Failed to load data')
-      console.error(error)
+      toast.error("Failed to load data");
+      console.error(error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === 'All' || 
-      (typeof product.category === 'object' && product.category._id === selectedCategory)
-    return matchesSearch && matchesCategory
-  })
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" ||
+      (typeof product.category === "object" &&
+        product.category._id === selectedCategory);
+    return matchesSearch && matchesCategory;
+  });
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-    if (!files || files.length === 0) return
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    setUploading(true)
+    setUploading(true);
     try {
-      const uploadPromises = Array.from(files).map(file => uploadApi.uploadImage(file))
-      const results = await Promise.all(uploadPromises)
-      const urls = results.map(r => r.data.url)
-      setFormData(prev => ({ ...prev, images: [...prev.images, ...urls] }))
-      toast.success('Images uploaded successfully!')
+      const uploadPromises = Array.from(files).map((file) =>
+        uploadApi.uploadImage(file)
+      );
+      const results = await Promise.all(uploadPromises);
+      const urls = results.map((r) => r.data.url);
+      setFormData((prev) => ({ ...prev, images: [...prev.images, ...urls] }));
+      toast.success("Images uploaded successfully!");
     } catch (error: any) {
-      toast.error(error.message || 'Failed to upload images')
+      toast.error(error.message || "Failed to upload images");
     } finally {
-      setUploading(false)
+      setUploading(false);
     }
-  }
+  };
 
   const removeImage = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, i) => i !== index)
-    }))
-  }
+      images: prev.images.filter((_, i) => i !== index),
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
+    e.preventDefault();
+
     if (formData.images.length === 0) {
-      toast.error('Please upload at least one product image')
-      return
+      toast.error("Please upload at least one product image");
+      return;
     }
 
-    setSubmitting(true)
+    setSubmitting(true);
     try {
       if (editingProduct) {
-        await productsApi.update(editingProduct._id, formData)
-        toast.success('Product updated successfully!')
+        await productsApi.update(editingProduct._id, formData);
+        toast.success("Product updated successfully!");
       } else {
-        await productsApi.create(formData)
-        toast.success('Product created successfully!')
+        await productsApi.create(formData);
+        toast.success("Product created successfully!");
       }
 
-      setShowForm(false)
-      setEditingProduct(null)
-      resetForm()
-      loadData()
+      setShowForm(false);
+      setEditingProduct(null);
+      resetForm();
+      loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Operation failed')
+      toast.error(error.message || "Operation failed");
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
-      name: '',
-      description: '',
-      shortDescription: '',
-      category: categories[0]?._id || '',
+      name: "",
+      description: "",
+      shortDescription: "",
+      category: categories[0]?._id || "",
       price: 0,
       originalPrice: 0,
-      grade: '',
-      origin: '',
-      weight: '',
+      grade: "",
+      origin: "",
+      weight: "",
       images: [],
       features: [],
       benefits: [],
       inStock: true,
       stockQuantity: 0,
-      badge: '',
+      badge: "",
       isPublished: false,
       isFeatured: false,
       displayOrder: 0,
       specifications: {
-        origin: '',
-        grade: '',
-        moistureContent: '',
-        crocin: '',
-        safranal: '',
-        picrocrocin: '',
-        shelfLife: '',
-        storage: ''
-      }
-    })
-  }
+        origin: "",
+        grade: "",
+        moistureContent: "",
+        crocin: "",
+        safranal: "",
+        picrocrocin: "",
+        shelfLife: "",
+        storage: "",
+      },
+    });
+  };
 
   const handleEdit = (product: Product) => {
-    setEditingProduct(product)
+    setEditingProduct(product);
     setFormData({
       name: product.name,
       description: product.description,
-      shortDescription: product.shortDescription || '',
-      category: typeof product.category === 'object' ? product.category._id : product.category,
+      shortDescription: product.shortDescription || "",
+      category:
+        typeof product.category === "object"
+          ? product.category._id
+          : product.category,
       price: product.price,
       originalPrice: product.originalPrice || 0,
-      grade: product.grade || '',
-      origin: product.origin || '',
-      weight: product.weight || '',
+      grade: product.grade || "",
+      origin: product.origin || "",
+      weight: product.weight || "",
       images: product.images,
       features: product.features || [],
       benefits: product.benefits || [],
       inStock: product.inStock,
       stockQuantity: product.stockQuantity || 0,
-      badge: product.badge || '',
+      badge: product.badge || "",
       isPublished: product.isPublished,
       isFeatured: product.isFeatured,
       displayOrder: product.displayOrder,
-      specifications: product.specifications || {
-        origin: '',
-        grade: '',
-        moistureContent: '',
-        crocin: '',
-        safranal: '',
-        picrocrocin: '',
-        shelfLife: '',
-        storage: ''
-      }
-    })
-    setShowForm(true)
-  }
+      specifications: {
+        origin: product.specifications?.origin || "",
+        grade: product.specifications?.grade || "",
+        moistureContent: product.specifications?.moistureContent || "",
+        crocin: product.specifications?.crocin || "",
+        safranal: product.specifications?.safranal || "",
+        picrocrocin: product.specifications?.picrocrocin || "",
+        shelfLife: product.specifications?.shelfLife || "",
+        storage: product.specifications?.storage || "",
+      },
+    });
+    setShowForm(true);
+  };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      await productsApi.delete(id)
-      toast.success('Product deleted successfully!')
-      loadData()
+      await productsApi.delete(id);
+      toast.success("Product deleted successfully!");
+      loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to delete product')
+      toast.error(error.message || "Failed to delete product");
     }
-  }
+  };
 
   const togglePublish = async (id: string) => {
     try {
-      await productsApi.togglePublish(id)
-      toast.success('Publish status updated!')
-      loadData()
+      await productsApi.togglePublish(id);
+      toast.success("Publish status updated!");
+      loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update status')
+      toast.error(error.message || "Failed to update status");
     }
-  }
+  };
 
   const toggleFeatured = async (id: string) => {
     try {
-      await productsApi.toggleFeatured(id)
-      toast.success('Featured status updated!')
-      loadData()
+      await productsApi.toggleFeatured(id);
+      toast.success("Featured status updated!");
+      loadData();
     } catch (error: any) {
-      toast.error(error.message || 'Failed to update status')
+      toast.error(error.message || "Failed to update status");
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -239,7 +264,7 @@ const ProductsManagement = () => {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-saffron-500"></div>
         </div>
       </DashboardLayout>
-    )
+    );
   }
 
   return (
@@ -248,8 +273,12 @@ const ProductsManagement = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-admin-800">Manage Products</h2>
-            <p className="text-admin-600">Create and manage your saffron products</p>
+            <h2 className="text-xl font-semibold text-admin-800">
+              Manage Products
+            </h2>
+            <p className="text-admin-600">
+              Create and manage your saffron products
+            </p>
           </div>
           <button
             onClick={() => setShowForm(true)}
@@ -266,7 +295,9 @@ const ProductsManagement = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-admin-500 text-sm">Total Products</p>
-                <p className="text-2xl font-bold text-admin-800">{products.length}</p>
+                <p className="text-2xl font-bold text-admin-800">
+                  {products.length}
+                </p>
               </div>
               <Package className="w-8 h-8 text-saffron-500" />
             </div>
@@ -276,7 +307,7 @@ const ProductsManagement = () => {
               <div>
                 <p className="text-admin-500 text-sm">Published</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {products.filter(p => p.isPublished).length}
+                  {products.filter((p) => p.isPublished).length}
                 </p>
               </div>
               <Eye className="w-8 h-8 text-green-500" />
@@ -287,7 +318,7 @@ const ProductsManagement = () => {
               <div>
                 <p className="text-admin-500 text-sm">Out of Stock</p>
                 <p className="text-2xl font-bold text-red-600">
-                  {products.filter(p => !p.inStock).length}
+                  {products.filter((p) => !p.inStock).length}
                 </p>
               </div>
               <Package className="w-8 h-8 text-red-500" />
@@ -298,7 +329,7 @@ const ProductsManagement = () => {
               <div>
                 <p className="text-admin-500 text-sm">Featured</p>
                 <p className="text-2xl font-bold text-yellow-600">
-                  {products.filter(p => p.isFeatured).length}
+                  {products.filter((p) => p.isFeatured).length}
                 </p>
               </div>
               <Star className="w-8 h-8 text-yellow-500" />
@@ -325,8 +356,10 @@ const ProductsManagement = () => {
               className="input-field md:w-48"
             >
               <option value="All">All Categories</option>
-              {categories.map(category => (
-                <option key={category._id} value={category._id}>{category.name}</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category._id}>
+                  {category.name}
+                </option>
               ))}
             </select>
           </div>
@@ -358,12 +391,20 @@ const ProductsManagement = () => {
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-gradient-to-br from-saffron-100 to-saffron-200 rounded-lg flex-shrink-0">
                           {product.featuredImage && (
-                            <img src={product.featuredImage} alt={product.name} className="w-full h-full object-cover rounded-lg" />
+                            <img
+                              src={product.featuredImage}
+                              alt={product.name}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
                           )}
                         </div>
                         <div>
-                          <h3 className="font-medium text-admin-800">{product.name}</h3>
-                          <p className="text-sm text-admin-500">{product.grade} • {product.weight}</p>
+                          <h3 className="font-medium text-admin-800">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-admin-500">
+                            {product.grade} • {product.weight}
+                          </p>
                           {product.isFeatured && (
                             <span className="inline-block mt-1 px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">
                               Featured
@@ -374,31 +415,42 @@ const ProductsManagement = () => {
                     </td>
                     <td className="table-cell">
                       <span className="px-2 py-1 bg-admin-100 text-admin-700 rounded-full text-sm">
-                        {typeof product.category === 'object' ? product.category.name : 'N/A'}
+                        {typeof product.category === "object"
+                          ? product.category.name
+                          : "N/A"}
                       </span>
                     </td>
                     <td className="table-cell">
                       <div>
-                        <span className="font-semibold text-admin-800">₹{product.price.toLocaleString()}</span>
-                        {product.originalPrice && product.originalPrice > product.price && (
-                          <div className="text-sm text-admin-500 line-through">
-                            ₹{product.originalPrice.toLocaleString()}
-                          </div>
-                        )}
+                        <span className="font-semibold text-admin-800">
+                          ₹{product.price.toLocaleString()}
+                        </span>
+                        {product.originalPrice &&
+                          product.originalPrice > product.price && (
+                            <div className="text-sm text-admin-500 line-through">
+                              ₹{product.originalPrice.toLocaleString()}
+                            </div>
+                          )}
                       </div>
                     </td>
                     <td className="table-cell">
-                      <span className={`font-medium ${
-                        product.inStock ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {product.inStock ? (product.stockQuantity || 'In Stock') : 'Out of Stock'}
+                      <span
+                        className={`font-medium ${
+                          product.inStock ? "text-green-600" : "text-red-600"
+                        }`}
+                      >
+                        {product.inStock
+                          ? product.stockQuantity || "In Stock"
+                          : "Out of Stock"}
                       </span>
                     </td>
                     <td className="table-cell">
-                      <span className={`status-badge ${
-                        product.isPublished ? 'status-active' : 'status-draft'
-                      }`}>
-                        {product.isPublished ? 'Published' : 'Draft'}
+                      <span
+                        className={`status-badge ${
+                          product.isPublished ? "status-active" : "status-draft"
+                        }`}
+                      >
+                        {product.isPublished ? "Published" : "Draft"}
                       </span>
                     </td>
                     <td className="table-cell">
@@ -406,9 +458,9 @@ const ProductsManagement = () => {
                         <button
                           onClick={() => toggleFeatured(product._id)}
                           className={`p-2 rounded-lg transition-colors ${
-                            product.isFeatured 
-                              ? 'text-yellow-600 hover:bg-yellow-50' 
-                              : 'text-admin-400 hover:bg-admin-50'
+                            product.isFeatured
+                              ? "text-yellow-600 hover:bg-yellow-50"
+                              : "text-admin-400 hover:bg-admin-50"
                           }`}
                           title="Toggle Featured"
                         >
@@ -417,9 +469,9 @@ const ProductsManagement = () => {
                         <button
                           onClick={() => togglePublish(product._id)}
                           className={`p-2 rounded-lg transition-colors ${
-                            product.isPublished 
-                              ? 'text-green-600 hover:bg-green-50' 
-                              : 'text-admin-400 hover:bg-admin-50'
+                            product.isPublished
+                              ? "text-green-600 hover:bg-green-50"
+                              : "text-admin-400 hover:bg-admin-50"
                           }`}
                           title="Toggle Publish"
                         >
@@ -457,14 +509,17 @@ const ProductsManagement = () => {
         <Modal
           isOpen={showForm}
           onClose={() => {
-            setShowForm(false)
-            setEditingProduct(null)
-            resetForm()
+            setShowForm(false);
+            setEditingProduct(null);
+            resetForm();
           }}
-          title={editingProduct ? 'Edit Product' : 'Add New Product'}
+          title={editingProduct ? "Edit Product" : "Add New Product"}
           size="2xl"
         >
-          <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[80vh] overflow-y-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="p-6 space-y-6 max-h-[80vh] overflow-y-auto"
+          >
             {/* Basic Information */}
             <div className="space-y-4">
               <h4 className="font-medium text-admin-800">Basic Information</h4>
@@ -476,7 +531,9 @@ const ProductsManagement = () => {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="input-field"
                   placeholder="Enter product name"
                 />
@@ -489,12 +546,16 @@ const ProductsManagement = () => {
                 <select
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
                   className="input-field"
                 >
                   <option value="">Select category</option>
-                  {categories.map(category => (
-                    <option key={category._id} value={category._id}>{category.name}</option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -506,7 +567,12 @@ const ProductsManagement = () => {
                 <input
                   type="text"
                   value={formData.shortDescription}
-                  onChange={(e) => setFormData({...formData, shortDescription: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      shortDescription: e.target.value,
+                    })
+                  }
                   className="input-field"
                   placeholder="Brief product description"
                 />
@@ -520,7 +586,9 @@ const ProductsManagement = () => {
                   required
                   rows={4}
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
                   className="input-field"
                   placeholder="Detailed product description"
                 />
@@ -550,7 +618,7 @@ const ProductsManagement = () => {
                   >
                     <Upload className="w-8 h-8 text-admin-400 mb-2" />
                     <span className="text-sm text-admin-600">
-                      {uploading ? 'Uploading...' : 'Click to upload images'}
+                      {uploading ? "Uploading..." : "Click to upload images"}
                     </span>
                     <span className="text-xs text-admin-500 mt-1">
                       PNG, JPG, WEBP up to 5MB
@@ -594,7 +662,12 @@ const ProductsManagement = () => {
                     required
                     min="0"
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        price: parseFloat(e.target.value),
+                      })
+                    }
                     className="input-field"
                   />
                 </div>
@@ -606,7 +679,12 @@ const ProductsManagement = () => {
                     type="number"
                     min="0"
                     value={formData.originalPrice}
-                    onChange={(e) => setFormData({...formData, originalPrice: parseFloat(e.target.value)})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        originalPrice: parseFloat(e.target.value),
+                      })
+                    }
                     className="input-field"
                   />
                 </div>
@@ -617,7 +695,9 @@ const ProductsManagement = () => {
                   <input
                     type="text"
                     value={formData.grade}
-                    onChange={(e) => setFormData({...formData, grade: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, grade: e.target.value })
+                    }
                     className="input-field"
                     placeholder="e.g., Grade A+"
                   />
@@ -629,7 +709,9 @@ const ProductsManagement = () => {
                   <input
                     type="text"
                     value={formData.weight}
-                    onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, weight: e.target.value })
+                    }
                     className="input-field"
                     placeholder="e.g., 1g"
                   />
@@ -641,7 +723,9 @@ const ProductsManagement = () => {
                   <input
                     type="text"
                     value={formData.origin}
-                    onChange={(e) => setFormData({...formData, origin: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, origin: e.target.value })
+                    }
                     className="input-field"
                     placeholder="e.g., Kashmir"
                   />
@@ -654,7 +738,12 @@ const ProductsManagement = () => {
                     type="number"
                     min="0"
                     value={formData.stockQuantity}
-                    onChange={(e) => setFormData({...formData, stockQuantity: parseInt(e.target.value)})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stockQuantity: parseInt(e.target.value),
+                      })
+                    }
                     className="input-field"
                   />
                 </div>
@@ -669,28 +758,43 @@ const ProductsManagement = () => {
                   <input
                     type="checkbox"
                     checked={formData.inStock}
-                    onChange={(e) => setFormData({...formData, inStock: e.target.checked})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, inStock: e.target.checked })
+                    }
                     className="w-4 h-4 text-saffron-600 border-gray-300 rounded focus:ring-saffron-500"
                   />
-                  <span className="text-sm font-medium text-admin-700">In Stock</span>
+                  <span className="text-sm font-medium text-admin-700">
+                    In Stock
+                  </span>
                 </label>
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     checked={formData.isPublished}
-                    onChange={(e) => setFormData({...formData, isPublished: e.target.checked})}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        isPublished: e.target.checked,
+                      })
+                    }
                     className="w-4 h-4 text-saffron-600 border-gray-300 rounded focus:ring-saffron-500"
                   />
-                  <span className="text-sm font-medium text-admin-700">Published</span>
+                  <span className="text-sm font-medium text-admin-700">
+                    Published
+                  </span>
                 </label>
                 <label className="flex items-center space-x-2">
                   <input
                     type="checkbox"
                     checked={formData.isFeatured}
-                    onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, isFeatured: e.target.checked })
+                    }
                     className="w-4 h-4 text-saffron-600 border-gray-300 rounded focus:ring-saffron-500"
                   />
-                  <span className="text-sm font-medium text-admin-700">Featured Product</span>
+                  <span className="text-sm font-medium text-admin-700">
+                    Featured Product
+                  </span>
                 </label>
               </div>
             </div>
@@ -700,28 +804,33 @@ const ProductsManagement = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setShowForm(false)
-                  setEditingProduct(null)
-                  resetForm()
+                  setShowForm(false);
+                  setEditingProduct(null);
+                  resetForm();
                 }}
                 className="px-6 py-2 text-admin-600 hover:bg-admin-100 rounded-lg transition-colors"
                 disabled={submitting}
               >
                 Cancel
               </button>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn-primary"
                 disabled={submitting || uploading}
               >
-                {submitting ? 'Saving...' : editingProduct ? 'Update' : 'Create'} Product
+                {submitting
+                  ? "Saving..."
+                  : editingProduct
+                  ? "Update"
+                  : "Create"}{" "}
+                Product
               </button>
             </div>
           </form>
         </Modal>
       </div>
     </DashboardLayout>
-  )
-}
+  );
+};
 
-export default ProductsManagement
+export default ProductsManagement;

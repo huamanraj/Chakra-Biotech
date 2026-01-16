@@ -13,28 +13,16 @@ import {
   Clock,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { contactsApi } from "@/lib/api";
+import { contactsApi, ContactSubmission } from "@/lib/api";
 import { formatDateTime } from "@/lib/utils/formatters";
 
-interface Contact {
-  _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  subject: string;
-  message: string;
-  isRead: boolean;
-  isReplied: boolean;
-  adminNotes?: string;
-  createdAt: string;
-}
-
 const ContactManagement = () => {
-  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [contacts, setContacts] = useState<ContactSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [selectedContact, setSelectedContact] =
+    useState<ContactSubmission | null>(null);
 
   const statuses = ["All", "Unread", "Read", "Replied"];
 
@@ -107,13 +95,13 @@ const ContactManagement = () => {
     }
   };
 
-  const getStatusColor = (contact: Contact) => {
+  const getStatusColor = (contact: ContactSubmission) => {
     if (contact.isReplied) return "bg-green-100 text-green-700";
     if (contact.isRead) return "bg-yellow-100 text-yellow-700";
     return "bg-blue-100 text-blue-700";
   };
 
-  const getStatusText = (contact: Contact) => {
+  const getStatusText = (contact: ContactSubmission) => {
     if (contact.isReplied) return "Replied";
     if (contact.isRead) return "Read";
     return "New";
