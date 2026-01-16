@@ -46,8 +46,9 @@ const ContactManagement = () => {
     try {
       setLoading(true);
       const response = await contactsApi.getAll({});
-      // Ensure we always set an array
-      setContacts(Array.isArray(response.data) ? response.data : []);
+      // Extract contacts from nested data structure
+      const contactsData = response.data?.contacts || response.data || [];
+      setContacts(Array.isArray(contactsData) ? contactsData : []);
     } catch (error) {
       toast.error("Failed to load contacts");
       console.error(error);

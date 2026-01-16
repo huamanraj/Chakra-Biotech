@@ -1,42 +1,52 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Bell, Search, User, Settings, LogOut, Menu } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useAuth } from '../contexts/AuthContext'
-import toast from 'react-hot-toast'
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { Bell, Search, User, Settings, LogOut, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../contexts/AuthContext";
+import toast from "react-hot-toast";
 
 interface HeaderProps {
-  title: string
+  title: string;
 }
 
 const Header = ({ title }: HeaderProps) => {
-  const { logout, user } = useAuth()
-  const [showNotifications, setShowNotifications] = useState(false)
-  const [showProfile, setShowProfile] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
+  const { logout, user } = useAuth();
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleLogout = () => {
-    logout()
-    toast.success('Logged out successfully')
-  }
+    logout();
+    toast.success("Logged out successfully");
+  };
 
   const notifications = [
-    { id: 1, title: 'New order received', time: '2 min ago', type: 'order' },
-    { id: 2, title: 'Blog post published', time: '1 hour ago', type: 'content' },
-    { id: 3, title: 'Training enrollment', time: '3 hours ago', type: 'training' },
-  ]
+    { id: 1, title: "New order received", time: "2 min ago", type: "order" },
+    {
+      id: 2,
+      title: "Blog post published",
+      time: "1 hour ago",
+      type: "content",
+    },
+    {
+      id: 3,
+      title: "Training enrollment",
+      time: "3 hours ago",
+      type: "training",
+    },
+  ];
 
   return (
     <header className="bg-white border-b border-admin-200 px-4 sm:px-6 lg:px-8 py-4 sticky top-0 z-30">
@@ -50,7 +60,7 @@ const Header = ({ title }: HeaderProps) => {
               {title}
             </h1>
             <p className="text-xs sm:text-sm text-admin-500 hidden sm:block">
-              Welcome back, manage your saffron business
+              Welcome back, manage your agri-tech business
             </p>
           </div>
         </div>
@@ -92,14 +102,23 @@ const Header = ({ title }: HeaderProps) => {
                   className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-admin-200 z-50"
                 >
                   <div className="p-4 border-b border-admin-200">
-                    <h3 className="font-semibold text-admin-800">Notifications</h3>
+                    <h3 className="font-semibold text-admin-800">
+                      Notifications
+                    </h3>
                   </div>
                   <div className="max-h-80 overflow-y-auto">
                     {notifications.map((notification) => (
-                      <Link key={notification.id} href="/dashboard/notifications">
+                      <Link
+                        key={notification.id}
+                        href="/dashboard/notifications"
+                      >
                         <div className="p-4 border-b border-admin-100 hover:bg-admin-50 transition-colors cursor-pointer">
-                          <p className="text-sm font-medium text-admin-800">{notification.title}</p>
-                          <p className="text-xs text-admin-500 mt-1">{notification.time}</p>
+                          <p className="text-sm font-medium text-admin-800">
+                            {notification.title}
+                          </p>
+                          <p className="text-xs text-admin-500 mt-1">
+                            {notification.time}
+                          </p>
                         </div>
                       </Link>
                     ))}
@@ -126,8 +145,12 @@ const Header = ({ title }: HeaderProps) => {
                 <User className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
               </div>
               <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium text-admin-800">{user?.name || 'Admin User'}</p>
-                <p className="text-xs text-admin-500">{user?.role || 'Super Admin'}</p>
+                <p className="text-sm font-medium text-admin-800">
+                  {user?.name || "Admin User"}
+                </p>
+                <p className="text-xs text-admin-500">
+                  {user?.role || "Super Admin"}
+                </p>
               </div>
             </button>
 
@@ -146,8 +169,12 @@ const Header = ({ title }: HeaderProps) => {
                         <User className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <p className="font-semibold text-admin-800">{user?.name || 'Admin User'}</p>
-                        <p className="text-sm text-admin-500">{user?.email || 'admin@saffron.com'}</p>
+                        <p className="font-semibold text-admin-800">
+                          {user?.name || "Admin User"}
+                        </p>
+                        <p className="text-sm text-admin-500">
+                          {user?.email || "admin@chakrabiotech.com"}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -164,7 +191,7 @@ const Header = ({ title }: HeaderProps) => {
                         <span className="text-sm text-admin-700">Profile</span>
                       </button>
                     </Link>
-                    <button 
+                    <button
                       onClick={handleLogout}
                       className="w-full flex items-center space-x-3 px-3 py-2 text-left hover:bg-admin-50 rounded-lg transition-colors text-red-600 hover:bg-red-50"
                     >
@@ -196,13 +223,13 @@ const Header = ({ title }: HeaderProps) => {
         <div
           className="fixed inset-0 z-40"
           onClick={() => {
-            setShowNotifications(false)
-            setShowProfile(false)
+            setShowNotifications(false);
+            setShowProfile(false);
           }}
         />
       )}
     </header>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

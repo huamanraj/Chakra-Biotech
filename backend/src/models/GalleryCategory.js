@@ -9,9 +9,20 @@ const galleryCategorySchema = new mongoose.Schema({
   displayOrder: { type: Number, default: 0 }
 }, { timestamps: true });
 
-galleryCategorySchema.pre('save', function(next) {
-  if (this.isModified('name')) {
+galleryCategorySchema.pre('save', function (next) {
+  if (this.isModified('name') || !this.slug) {
     this.slug = slugify(this.name);
+  }
+  next();
+});
+
+// Also handle updates via findOneAndUpdate
+galleryCategorySchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate();
+  if (update.name || update.$set?.name) {
+    const name = update.name || update.$set?.name;
+    if (!update.$set) update.$set = {};
+    update.$set.slug = slugify(name);
   }
   next();
 });
