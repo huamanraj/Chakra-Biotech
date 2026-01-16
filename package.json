@@ -1,0 +1,14 @@
+{
+  "name": "chakra-bio",
+  "version": "1.0.0",
+  "description": "Chakra Bio - Multi-project workspace",
+  "scripts": {
+    "dev": "concurrently -n \"frontend,admin,backend\" -c \"cyan,magenta,green\" \"cd frontend && npm run dev\" \"cd admin-frontend && npm run dev\" \"cd backend && npm run dev\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:admin": "cd admin-frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
