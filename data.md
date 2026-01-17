@@ -1,6 +1,6 @@
 
 
-Chakra Biotech LLP: Saffron Agri-Technology Presentation 
+Chakra Biotech LLP: Saffron Agri-Technology 
 
 ## About the Company
 
