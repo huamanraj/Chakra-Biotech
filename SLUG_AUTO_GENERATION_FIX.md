@@ -1,4 +1,4 @@
-# Slug Generation Fix - Final Solution
+# Slug Generation Fix - 
 
 ## Problem
 
