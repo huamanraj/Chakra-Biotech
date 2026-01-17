@@ -8,6 +8,8 @@ import Link from "next/link";
 import { useHeroStore } from "@/lib/store";
 import { useState } from "react";
 
+import { HeroSkeleton } from "./Skeletons";
+
 export function HeroCarousel() {
   const { heroSections, loading, fetchHeroSections } = useHeroStore();
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,14 +33,7 @@ export function HeroCarousel() {
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
   if (loading || activeSlides.length === 0) {
-    return (
-      <section className="relative h-[400px] md:h-[500px] lg:h-[600px] bg-gradient-to-br from-saffron-100 to-saffron-200 flex items-center justify-center">
-        <div className="animate-pulse text-center">
-          <div className="h-8 w-64 bg-saffron-300 rounded mx-auto mb-4"></div>
-          <div className="h-4 w-96 bg-saffron-300 rounded mx-auto"></div>
-        </div>
-      </section>
-    );
+    return <HeroSkeleton />;
   }
 
   const currentSlide = activeSlides[currentIndex];

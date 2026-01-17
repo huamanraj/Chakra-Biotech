@@ -88,6 +88,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <meta
+          name="google-site-verification"
+          content="P7xktxQvkjDDtdmf1zCxSy0S5GSGNEpVo2BejA_JdOA"
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <meta name="theme-color" content="#DC2626" />

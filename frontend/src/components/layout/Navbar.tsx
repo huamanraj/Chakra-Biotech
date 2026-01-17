@@ -35,7 +35,7 @@ export function Navbar() {
             alt="Chakra Biotech Logo"
             className="w-10 h-10 object-contain"
           />
-          <span className="font-serif text-lg md:text-2xl font-semibold text-foreground whitespace-nowrap">
+          <span className="font-serif text-lg md:text-2xl font-semibold text-foreground whitespace-nowrap hidden md:block">
             Chakra <span className="text-primary">Biotech</span>
           </span>
         </Link>

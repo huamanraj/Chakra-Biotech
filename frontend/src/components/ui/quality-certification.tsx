@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Shield, 
-  Award, 
-  CheckCircle, 
-  Star, 
+import {
+  Shield,
+  Award,
+  CheckCircle,
+  Star,
   Sparkles,
   Globe,
   Leaf,
@@ -15,7 +15,7 @@ import {
   TrendingUp,
   Eye,
   Heart,
-  Zap
+  Zap,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ const certifications: Certification[] = [
     description: "International standard for food safety management systems",
     year: "2020",
     color: "text-blue-600",
-    bgColor: "bg-blue-50"
+    bgColor: "bg-blue-50",
   },
   {
     id: "fssai",
@@ -59,7 +59,7 @@ const certifications: Certification[] = [
     description: "Food Safety and Standards Authority of India certification",
     year: "2019",
     color: "text-green-600",
-    bgColor: "bg-green-50"
+    bgColor: "bg-green-50",
   },
   {
     id: "organic",
@@ -69,7 +69,7 @@ const certifications: Certification[] = [
     description: "Certified organic farming and processing standards",
     year: "2018",
     color: "text-emerald-600",
-    bgColor: "bg-emerald-50"
+    bgColor: "bg-emerald-50",
   },
   {
     id: "gi",
@@ -79,17 +79,18 @@ const certifications: Certification[] = [
     description: "Geographical Indication tag for authentic Kashmir saffron",
     year: "2017",
     color: "text-purple-600",
-    bgColor: "bg-purple-50"
+    bgColor: "bg-purple-50",
   },
   {
     id: "apeda",
     name: "APEDA",
     subtitle: "Export Quality",
     icon: TrendingUp,
-    description: "Agricultural and Processed Food Products Export Development Authority",
+    description:
+      "Agricultural and Processed Food Products Export Development Authority",
     year: "2016",
     color: "text-orange-600",
-    bgColor: "bg-orange-50"
+    bgColor: "bg-orange-50",
   },
   {
     id: "haccp",
@@ -99,8 +100,8 @@ const certifications: Certification[] = [
     description: "Hazard Analysis and Critical Control Points certification",
     year: "2021",
     color: "text-red-600",
-    bgColor: "bg-red-50"
-  }
+    bgColor: "bg-red-50",
+  },
 ];
 
 const qualityMetrics: QualityMetric[] = [
@@ -110,7 +111,7 @@ const qualityMetrics: QualityMetric[] = [
     value: "99.9%",
     icon: Sparkles,
     description: "Lab-tested purity with zero adulterants",
-    color: "text-gold"
+    color: "text-gold",
   },
   {
     id: "grade",
@@ -118,7 +119,7 @@ const qualityMetrics: QualityMetric[] = [
     value: "A+",
     icon: Star,
     description: "Highest grade saffron with premium characteristics",
-    color: "text-primary"
+    color: "text-primary",
   },
   {
     id: "customers",
@@ -126,7 +127,7 @@ const qualityMetrics: QualityMetric[] = [
     value: "10,000+",
     icon: Users,
     description: "Trusted by customers worldwide",
-    color: "text-blue-600"
+    color: "text-blue-600",
   },
   {
     id: "experience",
@@ -134,8 +135,8 @@ const qualityMetrics: QualityMetric[] = [
     value: "35+",
     icon: Clock,
     description: "Heritage of quality since 1985",
-    color: "text-green-600"
-  }
+    color: "text-green-600",
+  },
 ];
 
 interface QualityCertificationProps {
@@ -146,12 +147,12 @@ interface QualityCertificationProps {
   className?: string;
 }
 
-export function QualityCertification({ 
+export function QualityCertification({
   variant = "full",
   showMetrics = true,
   showCertifications = true,
   animated = true,
-  className = ""
+  className = "",
 }: QualityCertificationProps) {
   const [selectedCert, setSelectedCert] = useState<string | null>(null);
   const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
@@ -168,7 +169,9 @@ export function QualityCertification({
             <Shield className="w-6 h-6 text-primary" />
             <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
           </motion.div>
-          <span className="font-semibold text-foreground">Certified Quality</span>
+          <span className="font-semibold text-foreground">
+            Certified Quality
+          </span>
         </div>
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
@@ -181,7 +184,9 @@ export function QualityCertification({
 
   if (variant === "compact") {
     return (
-      <div className={`bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl p-6 ${className}`}>
+      <div
+        className={`bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 rounded-2xl p-6 ${className}`}
+      >
         <div className="text-center mb-6">
           <motion.div
             initial={{ scale: 0 }}
@@ -210,7 +215,9 @@ export function QualityCertification({
             >
               <metric.icon className={`w-5 h-5 ${metric.color} mx-auto mb-2`} />
               <div className="font-bold text-foreground">{metric.value}</div>
-              <div className="text-xs text-muted-foreground">{metric.label}</div>
+              <div className="text-xs text-muted-foreground">
+                {metric.label}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -219,40 +226,44 @@ export function QualityCertification({
   }
 
   return (
-    <div className={`bg-gradient-to-br from-card via-card/50 to-background rounded-3xl p-8 ${className}`}>
+    <div
+      className={`bg-gradient-to-br from-card via-card/50 to-background rounded-2xl md:rounded-3xl p-4 md:p-6 lg:p-8 overflow-hidden ${className}`}
+    >
       {/* Header */}
-      <div className="text-center mb-8">
+      <div className="text-center mb-6 md:mb-8">
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", duration: 1 }}
-          className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full mb-6 relative"
+          className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-primary to-accent rounded-full mb-4 md:mb-6 relative"
         >
-          <Shield className="w-10 h-10 text-white" />
+          <Shield className="w-8 h-8 md:w-10 md:h-10 text-white" />
           <motion.div
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="absolute inset-0 bg-primary/20 rounded-full"
           />
         </motion.div>
-        
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl font-serif font-bold text-foreground mb-3"
+          className="text-2xl md:text-3xl font-serif font-bold text-foreground mb-2 md:mb-3"
         >
-          Certified & <span className="text-gradient-saffron">Trusted Quality</span>
+          Certified &{" "}
+          <span className="text-gradient-saffron">Trusted Quality</span>
         </motion.h2>
-        
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-muted-foreground max-w-2xl mx-auto"
+          className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto px-2"
         >
-          Our commitment to excellence is backed by international certifications and rigorous quality standards, 
-          ensuring you receive only the finest saffron with complete authenticity and purity.
+          Our commitment to excellence is backed by international certifications
+          and rigorous quality standards, ensuring you receive only the finest
+          saffron with complete authenticity and purity.
         </motion.p>
       </div>
 
@@ -262,7 +273,7 @@ export function QualityCertification({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-8 md:mb-12"
         >
           {qualityMetrics.map((metric, index) => (
             <motion.div
@@ -275,29 +286,31 @@ export function QualityCertification({
               onHoverEnd={() => setHoveredMetric(null)}
               className="relative group cursor-pointer"
             >
-              <div className="bg-card rounded-2xl p-6 text-center shadow-card hover:shadow-elevated transition-all duration-300 border border-border/50">
+              <div className="bg-card rounded-xl md:rounded-2xl p-3 md:p-4 lg:p-6 text-center shadow-card hover:shadow-elevated transition-all duration-300 border border-border/50">
                 <motion.div
-                  animate={{ 
+                  animate={{
                     rotate: hoveredMetric === metric.id ? [0, 10, -10, 0] : 0,
-                    scale: hoveredMetric === metric.id ? 1.1 : 1
+                    scale: hoveredMetric === metric.id ? 1.1 : 1,
                   }}
                   transition={{ duration: 0.5 }}
-                  className={`inline-flex items-center justify-center w-12 h-12 rounded-full mb-4 ${metric.color === 'text-gold' ? 'bg-yellow-50' : 'bg-primary/10'}`}
+                  className={`inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full mb-2 md:mb-4 ${metric.color === "text-gold" ? "bg-yellow-50" : "bg-primary/10"}`}
                 >
-                  <metric.icon className={`w-6 h-6 ${metric.color}`} />
+                  <metric.icon
+                    className={`w-5 h-5 md:w-6 md:h-6 ${metric.color}`}
+                  />
                 </motion.div>
-                
+
                 <motion.div
                   animate={{ scale: hoveredMetric === metric.id ? 1.1 : 1 }}
-                  className="text-2xl font-bold text-foreground mb-2"
+                  className="text-xl md:text-2xl font-bold text-foreground mb-1 md:mb-2"
                 >
                   {metric.value}
                 </motion.div>
-                
-                <div className="text-sm font-medium text-muted-foreground mb-2">
+
+                <div className="text-xs md:text-sm font-medium text-muted-foreground mb-1 md:mb-2">
                   {metric.label}
                 </div>
-                
+
                 <AnimatePresence>
                   {hoveredMetric === metric.id && (
                     <motion.div
@@ -311,7 +324,7 @@ export function QualityCertification({
                   )}
                 </AnimatePresence>
               </div>
-              
+
               {/* Floating particles */}
               {hoveredMetric === metric.id && (
                 <motion.div
@@ -324,18 +337,18 @@ export function QualityCertification({
                     <motion.div
                       key={i}
                       initial={{ scale: 0, x: 0, y: 0 }}
-                      animate={{ 
+                      animate={{
                         scale: [0, 1, 0],
                         x: [0, (i - 1) * 20, (i - 1) * 40],
-                        y: [0, -20, -40]
+                        y: [0, -20, -40],
                       }}
-                      transition={{ 
+                      transition={{
                         duration: 1.5,
                         delay: i * 0.2,
                         repeat: Infinity,
-                        repeatDelay: 1
+                        repeatDelay: 1,
                       }}
-                      className={`absolute top-1/2 left-1/2 w-2 h-2 rounded-full ${metric.color === 'text-gold' ? 'bg-yellow-400' : 'bg-primary'}`}
+                      className={`absolute top-1/2 left-1/2 w-2 h-2 rounded-full ${metric.color === "text-gold" ? "bg-yellow-400" : "bg-primary"}`}
                     />
                   ))}
                 </motion.div>
@@ -352,11 +365,11 @@ export function QualityCertification({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
         >
-          <h3 className="text-xl font-serif font-semibold text-foreground mb-6 text-center">
+          <h3 className="text-lg md:text-xl font-serif font-semibold text-foreground mb-4 md:mb-6 text-center">
             International Certifications
           </h3>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4">
             {certifications.map((cert, index) => (
               <motion.div
                 key={cert.id}
@@ -364,34 +377,40 @@ export function QualityCertification({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9 + index * 0.1 }}
                 whileHover={{ scale: 1.05, y: -2 }}
-                onClick={() => setSelectedCert(selectedCert === cert.id ? null : cert.id)}
+                onClick={() =>
+                  setSelectedCert(selectedCert === cert.id ? null : cert.id)
+                }
                 className="relative group cursor-pointer"
               >
-                <div className={`${cert.bgColor} rounded-xl p-4 text-center transition-all duration-300 hover:shadow-lg border border-border/30`}>
+                <div
+                  className={`${cert.bgColor} rounded-lg md:rounded-xl p-3 md:p-4 text-center transition-all duration-300 hover:shadow-lg border border-border/30`}
+                >
                   <motion.div
-                    animate={{ 
+                    animate={{
                       rotate: selectedCert === cert.id ? 360 : 0,
-                      scale: selectedCert === cert.id ? 1.1 : 1
+                      scale: selectedCert === cert.id ? 1.1 : 1,
                     }}
                     transition={{ duration: 0.5 }}
                     className="mb-3"
                   >
-                    <cert.icon className={`w-8 h-8 ${cert.color} mx-auto`} />
+                    <cert.icon
+                      className={`w-6 h-6 md:w-8 md:h-8 ${cert.color} mx-auto`}
+                    />
                   </motion.div>
-                  
-                  <div className="text-sm font-bold text-foreground mb-1">
+
+                  <div className="text-xs md:text-sm font-bold text-foreground mb-1">
                     {cert.name}
                   </div>
-                  
+
                   <div className="text-xs text-muted-foreground">
                     {cert.subtitle}
                   </div>
-                  
+
                   <Badge variant="outline" className="mt-2 text-xs">
                     {cert.year}
                   </Badge>
                 </div>
-                
+
                 {/* Tooltip */}
                 <AnimatePresence>
                   {selectedCert === cert.id && (
@@ -413,7 +432,9 @@ export function QualityCertification({
                         </Badge>
                         <div className="flex items-center gap-1">
                           <CheckCircle className="w-3 h-3 text-green-600" />
-                          <span className="text-xs text-green-600">Verified</span>
+                          <span className="text-xs text-green-600">
+                            Verified
+                          </span>
                         </div>
                       </div>
                     </motion.div>
@@ -430,9 +451,9 @@ export function QualityCertification({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2 }}
-        className="mt-12 pt-8 border-t border-border/50"
+        className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border/50"
       >
-        <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 lg:gap-8 text-xs md:text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Eye className="w-4 h-4 text-blue-600" />
             <span>Transparent Process</span>
