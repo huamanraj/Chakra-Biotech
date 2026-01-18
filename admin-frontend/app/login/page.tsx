@@ -67,10 +67,6 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      console.log("Attempting login with:", {
-        email: formData.email,
-        password: "***",
-      });
       const success = await login(
         formData.email,
         formData.password,
@@ -310,34 +306,6 @@ const LoginPage = () => {
                   )}
                 </button>
               </form>
-
-              {/* Backend Credentials Info */}
-              <div className="mt-6 p-4 bg-saffron-50 rounded-lg border border-saffron-200">
-                <h4 className="text-sm font-medium text-saffron-800 mb-2">
-                  Login Credentials:
-                </h4>
-                <div className="text-xs text-saffron-700 space-y-1">
-                  <p>
-                    Use the admin credentials from your backend{" "}
-                    <code className="bg-saffron-100 px-1 py-0.5 rounded">
-                      .env
-                    </code>{" "}
-                    file
-                  </p>
-                  <div className="mt-3 p-2 bg-white rounded border border-saffron-300">
-                    <p className="font-mono">
-                      <strong>Email:</strong> a@aa.co
-                    </p>
-                    <p className="font-mono">
-                      <strong>Password:</strong> 123412
-                    </p>
-                  </div>
-                  <p className="text-saffron-600 mt-2">
-                    * These are from ADMIN_EMAIL and ADMIN_PASSWORD in
-                    backend/.env
-                  </p>
-                </div>
-              </div>
 
               {/* Footer */}
               <div className="mt-8 text-center">

@@ -48,15 +48,44 @@ const values = [
 
 const team = [
   {
-    name: "Mr. Siddhartha Sharma",
-    role: "Founder & Lead Developer",
-    bio: "M.Sc. (IT), Manipal University. Focused on agri-data systems, aeroponic research, and strategic partnerships.",
-    image: "/team-siddhartha.jpg",
+    name: "Mr. Mali Ram Sharma",
+    role: "Founder & Advisor",
+    bio: "LLB, Rajasthan University. Brings extensive legal expertise and strategic administrative oversight to Chakra Biotech's operations.",
+    image: "/team-leadership.jpg",
   },
   {
     name: "Mr. Ankit Sharma",
     role: "Operations & Quality",
-    bio: "Expert in biotechnology and modern farming systems. Leads R&D, aeroponic operations, and cultivation optimization.",
+    bio: "Expert in modern farming systems and agricultural market operations. Leads R&D and cultivation optimization with a focus on commercial scalability.",
+    education: ["B.Sc. (Hons.) Agriculture", "MBA - Sales & Marketing"],
+    experience: [
+      {
+        company: "Foragen Seeds Pvt. Ltd.",
+        designation: "Territory Manager (TM)",
+        duration: "10 July 2025 – Present",
+        points: [
+          "Territory handling for seed sales and promotion",
+          "Dealer and distributor network development",
+          "Farmer meetings and product demonstrations",
+          "Sales target achievement and market expansion",
+        ],
+      },
+      {
+        company: "Crystal Crop Protection Limited",
+        designation: "Management Trainee (MT)",
+        duration: "01 Jan 2024 – 30 Jan 2025",
+        points: [
+          "Sales support and field marketing activities",
+          "Dealer management and farmer engagement programs",
+          "Exposure to crop protection products and market operations",
+        ],
+      },
+    ],
+    certifications: [
+      "70 Hours Personality Development & Communication Training",
+      "21 Days Training Programme on Agripreneurship (AAU Anand)",
+      "01 Week Training on Growing Startups in Agriculture (SKNAU Jobner)",
+    ],
     image: "/team-ankit.jpg",
   },
 ];
@@ -227,31 +256,112 @@ export default function About() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+          <div className="grid lg:grid-cols-1 gap-12 max-w-5xl mx-auto">
             {team.map((member, index) => (
               <motion.div
                 key={member.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
-                className="flex flex-col md:flex-row gap-8 items-center bg-card p-8 rounded-3xl shadow-card hover:shadow-elevated transition-shadow border border-border/50"
+                className="flex flex-col md:flex-row gap-10 bg-card p-10 rounded-4xl shadow-card hover:shadow-elevated transition-all duration-500 border border-border/50"
               >
-                <div className="w-40 h-40 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/30 flex-shrink-0 overflow-hidden">
+                <div className="w-48 h-48 rounded-3xl bg-gradient-to-br from-primary/10 to-primary/30 flex-shrink-0 overflow-hidden sticky top-8">
                   <div className="w-full h-full flex items-center justify-center text-primary/40">
-                    <Users className="w-16 h-16" />
+                    <Users className="w-20 h-20" />
                   </div>
                 </div>
-                <div className="text-center md:text-left">
-                  <h3 className="text-2xl font-serif font-bold text-foreground">
-                    {member.name}
-                  </h3>
-                  <div className="text-primary font-medium mb-4">
-                    {member.role}
+
+                <div className="flex-1 space-y-6">
+                  <div>
+                    <h3 className="text-3xl font-serif font-bold text-foreground">
+                      {member.name}
+                    </h3>
+                    <div className="text-primary font-semibold text-lg mt-1">
+                      {member.role}
+                    </div>
                   </div>
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+
+                  <p className="text-muted-foreground text-lg leading-relaxed italic border-l-4 border-primary/20 pl-6">
                     {member.bio}
                   </p>
+
+                  <div className="grid sm:grid-cols-2 gap-8 pt-4">
+                    {"education" in member && (
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-foreground flex items-center gap-2">
+                          <Award className="w-4 h-4 text-primary" />
+                          Education
+                        </h4>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                          {member.education?.map((edu) => (
+                            <li key={edu} className="flex gap-2">
+                              <span className="text-primary">•</span>
+                              {edu}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {"certifications" in member && (
+                      <div className="space-y-3">
+                        <h4 className="font-bold text-foreground flex items-center gap-2">
+                          <ShieldCheck className="w-4 h-4 text-primary" />
+                          Certifications
+                        </h4>
+                        <ul className="space-y-2 text-sm text-muted-foreground">
+                          {member.certifications?.map((cert) => (
+                            <li key={cert} className="flex gap-2">
+                              <span className="text-primary">•</span>
+                              {cert}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {"experience" in member && (
+                    <div className="space-y-4 pt-4">
+                      <h4 className="font-bold text-foreground flex items-center gap-2">
+                        <Globe className="w-4 h-4 text-primary" />
+                        Professional Experience
+                      </h4>
+                      <div className="space-y-6">
+                        {member.experience?.map((exp, i) => (
+                          <div
+                            key={i}
+                            className="bg-muted/30 p-5 rounded-2xl border border-border/40"
+                          >
+                            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-3">
+                              <div>
+                                <h5 className="font-bold text-foreground">
+                                  {exp.company}
+                                </h5>
+                                <p className="text-primary text-sm font-medium">
+                                  {exp.designation}
+                                </p>
+                              </div>
+                              <span className="text-[10px] uppercase tracking-wider font-bold bg-primary/10 text-primary px-3 py-1 rounded-full w-fit">
+                                {exp.duration}
+                              </span>
+                            </div>
+                            <ul className="space-y-1.5 text-xs text-muted-foreground">
+                              {exp.points.map((point, pi) => (
+                                <li key={pi} className="flex gap-2">
+                                  <span className="text-primary text-[10px]">
+                                    ◆
+                                  </span>
+                                  {point}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             ))}

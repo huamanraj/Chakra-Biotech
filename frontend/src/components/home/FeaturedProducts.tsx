@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedImage } from "@/components/ui/animated-image";
 import { useProductsStore } from "@/lib/store";
 
+import { FeaturedProductsSkeleton } from "./Skeletons";
+
 export function FeaturedProducts() {
   const { products, loading, fetchProducts } = useProductsStore();
   const whatsappNumber =
@@ -22,21 +24,13 @@ export function FeaturedProducts() {
       product.weight || "1g"
     } (₹${product.price.toLocaleString()})`;
     const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-      message
+      message,
     )}`;
     window.open(url, "_blank");
   };
 
   if (loading) {
-    return (
-      <section className="py-12 md:py-16 lg:py-20 bg-cream-dark">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 md:w-12 md:h-12 animate-spin text-primary" />
-          </div>
-        </div>
-      </section>
-    );
+    return <FeaturedProductsSkeleton />;
   }
 
   if (products.length === 0) {

@@ -7,6 +7,8 @@ import { ArrowRight, Calendar, User, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useBlogsStore } from "@/lib/store";
 
+import { BlogPreviewSkeleton } from "./Skeletons";
+
 export function BlogPreview() {
   const { blogs, loading, fetchBlogs } = useBlogsStore();
 
@@ -25,15 +27,7 @@ export function BlogPreview() {
   const publishedBlogs = blogs.filter((b) => b.isPublished).slice(0, 3);
 
   if (loading) {
-    return (
-      <section className="py-12 md:py-16 lg:py-20 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 md:w-12 md:h-12 animate-spin text-primary" />
-          </div>
-        </div>
-      </section>
-    );
+    return <BlogPreviewSkeleton />;
   }
 
   if (publishedBlogs.length === 0) {
