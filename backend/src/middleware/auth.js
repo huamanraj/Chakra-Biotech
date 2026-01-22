@@ -10,12 +10,13 @@ const auth = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Verify admin credentials
-    if (decoded.email !== process.env.ADMIN_EMAIL) {
-      return res.status(401).json({ success: false, message: 'Invalid authentication' });
-    }
+    // Store admin info in request for use in controllers
+    req.admin = {
+      id: decoded.id,
+      email: decoded.email,
+      role: decoded.role
+    };
 
-    req.admin = { email: decoded.email };
     next();
   } catch (error) {
     res.status(401).json({ success: false, message: 'Invalid or expired token' });

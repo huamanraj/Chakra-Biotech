@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const Admin = require('../models/Admin');
 const { JWT_EXPIRES_IN } = require('../config/constants');
 
 exports.login = async (req, res) => {
@@ -7,24 +7,60 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     console.log('Login attempt:', { email, providedPassword: password ? '***' : 'missing' });
-    console.log('Expected:', { 
-      email: process.env.ADMIN_EMAIL, 
-      password: process.env.ADMIN_PASSWORD ? '***' : 'missing' 
-    });
 
     if (!email || !password) {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
-    if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
-      console.log('Login failed: Invalid credentials');
+    // Find admin with password field included
+    const admin = await Admin.findOne({ email }).select('+password');
+
+    if (!admin) {
+      console.log('Login failed: Admin not found');
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+    if (!admin.isActive) {
+      console.log('Login failed: Admin account is disabled');
+      return res.status(401).json({ success: false, message: 'Account is disabled' });
+    }
+
+    // Compare password
+    const isPasswordValid = await admin.comparePassword(password);
+
+    if (!isPasswordValid) {
+      console.log('Login failed: Invalid password');
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    // Update last login
+    admin.lastLogin = new Date();
+    await admin.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      {
+        id: admin._id,
+        email: admin.email,
+        role: admin.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
 
     console.log('Login successful for:', email);
-    res.json({ success: true, token, message: 'Login successful' });
+
+    res.json({
+      success: true,
+      token,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+        role: admin.role
+      },
+      message: 'Login successful'
+    });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ success: false, message: error.message });
@@ -33,7 +69,21 @@ exports.login = async (req, res) => {
 
 exports.verify = async (req, res) => {
   try {
-    res.json({ success: true, admin: { email: req.admin.email } });
+    const admin = await Admin.findById(req.admin.id);
+
+    if (!admin || !admin.isActive) {
+      return res.status(401).json({ success: false, message: 'Admin not found or inactive' });
+    }
+
+    res.json({
+      success: true,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+        name: admin.name,
+        role: admin.role
+      }
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

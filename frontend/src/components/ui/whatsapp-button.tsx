@@ -1,10 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MessageCircle } from "lucide-react";
+import { companyApi } from "@/lib/api/company";
 
 export function WhatsAppButton() {
-  const whatsappNumber = "919876543210";
+  const [whatsappNumber, setWhatsappNumber] = useState("919876543210");
+
+  useEffect(() => {
+    const fetchWhatsAppNumber = async () => {
+      try {
+        const response = await companyApi.get();
+        if (response.success && response.data.whatsappNumber) {
+          // Remove any spaces or special characters
+          const cleanNumber = response.data.whatsappNumber.replace(/\s+/g, "");
+          setWhatsappNumber(cleanNumber);
+        }
+      } catch (error) {
+        console.error("Failed to fetch WhatsApp number:", error);
+        // Keep default number on error
+      }
+    };
+
+    fetchWhatsAppNumber();
+  }, []);
+
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=Hello! I'm interested in your saffron products.`;
 
   return (

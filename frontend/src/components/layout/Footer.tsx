@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Phone,
@@ -7,9 +10,32 @@ import {
   Instagram,
   Twitter,
 } from "lucide-react";
+import { companyApi, type CompanyDetails } from "@/lib/api/company";
 
 export function Footer() {
-  const whatsappNumber = "919876543210";
+  const [companyData, setCompanyData] = useState<CompanyDetails | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCompanyData = async () => {
+      try {
+        const response = await companyApi.get();
+        if (response.success) {
+          setCompanyData(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch company data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCompanyData();
+  }, []);
+
+  // Default values as fallback
+  const whatsappNumber =
+    companyData?.whatsappNumber?.replace(/\s+/g, "") || "919876543210";
   const whatsappUrl = `https://wa.me/${whatsappNumber}`;
 
   return (
@@ -36,29 +62,40 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-secondary-foreground/80 leading-relaxed text-sm">
-              An Agri-Tech leader specializing in precision-controlled aeroponic
-              saffron cultivation. We are democratizing "Red Gold" through
-              sustainable technology and innovation.
+              {companyData?.footer?.description ||
+                'An Agri-Tech leader specializing in precision-controlled aeroponic saffron cultivation. We are democratizing "Red Gold" through sustainable technology and innovation.'}
             </p>
             <div className="flex gap-4">
-              <a
-                href="#"
-                className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-              >
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-              >
-                <Instagram className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
-              >
-                <Twitter className="w-4 h-4" />
-              </a>
+              {companyData?.socialMedia?.facebook && (
+                <a
+                  href={companyData.socialMedia.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                >
+                  <Facebook className="w-4 h-4" />
+                </a>
+              )}
+              {companyData?.socialMedia?.instagram && (
+                <a
+                  href={companyData.socialMedia.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+              )}
+              {companyData?.socialMedia?.twitter && (
+                <a
+                  href={companyData.socialMedia.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-secondary-foreground/5 flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-all"
+                >
+                  <Twitter className="w-4 h-4" />
+                </a>
+              )}
             </div>
           </div>
 
@@ -69,13 +106,17 @@ export function Footer() {
               <span className="absolute -bottom-1 left-0 w-8 h-0.5 bg-primary rounded-full"></span>
             </h3>
             <ul className="space-y-3">
-              {[
-                { name: "Our Products", href: "/products" },
-                { name: "Training Programs", href: "/training" },
-                { name: "Research & Blog", href: "/blog" },
-                { name: "About Company", href: "/about" },
-                { name: "Terms of Service", href: "/terms" },
-              ].map((link) => (
+              {(companyData?.footer?.quickLinks &&
+              companyData.footer.quickLinks.length > 0
+                ? companyData.footer.quickLinks
+                : [
+                    { name: "Our Products", href: "/products" },
+                    { name: "Training Programs", href: "/training" },
+                    { name: "Research & Blog", href: "/blog" },
+                    { name: "About Company", href: "/about" },
+                    { name: "Terms of Service", href: "/terms" },
+                  ]
+              ).map((link) => (
                 <li key={link.name}>
                   <Link
                     href={link.href}
@@ -95,13 +136,17 @@ export function Footer() {
               <span className="absolute -bottom-1 left-0 w-8 h-0.5 bg-primary rounded-full"></span>
             </h3>
             <ul className="space-y-3">
-              {[
-                "Aeroponic Saffron",
-                "Indoor Cultivation Training",
-                "CEA Consulting",
-                "Biotech Innovation",
-                "Sustainable Farming",
-              ].map((item) => (
+              {(companyData?.footer?.offerings &&
+              companyData.footer.offerings.length > 0
+                ? companyData.footer.offerings
+                : [
+                    "Aeroponic Saffron",
+                    "Indoor Cultivation Training",
+                    "CEA Consulting",
+                    "Biotech Innovation",
+                    "Sustainable Farming",
+                  ]
+              ).map((item) => (
                 <li key={item} className="text-secondary-foreground/70 text-sm">
                   {item}
                 </li>
@@ -121,9 +166,13 @@ export function Footer() {
                   <MapPin className="w-4 h-4" />
                 </div>
                 <span className="text-secondary-foreground/70 text-sm leading-relaxed">
-                  Jaipur, Rajasthan,
+                  {companyData?.address?.city &&
+                    `${companyData.address.city}, `}
+                  {companyData?.address?.state &&
+                    `${companyData.address.state},`}
                   <br />
-                  India - 302021
+                  {companyData?.address?.country || "India"} -{" "}
+                  {companyData?.address?.zipCode || "302021"}
                 </span>
               </li>
               <li>
@@ -137,20 +186,20 @@ export function Footer() {
                     <Phone className="w-4 h-4" />
                   </div>
                   <span className="text-secondary-foreground/70 text-sm group-hover:text-primary transition-colors">
-                    +91 98765 43210
+                    {companyData?.phone || "+91 98765 43210"}
                   </span>
                 </a>
               </li>
               <li>
                 <a
-                  href="mailto:info@chakrabiotech.com"
+                  href={`mailto:${companyData?.email || "info@chakrabiotech.com"}`}
                   className="flex items-center gap-3 group"
                 >
                   <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Mail className="w-4 h-4" />
                   </div>
                   <span className="text-secondary-foreground/70 text-sm group-hover:text-primary transition-colors">
-                    info@chakrabiotech.com
+                    {companyData?.email || "info@chakrabiotech.com"}
                   </span>
                 </a>
               </li>
@@ -160,8 +209,9 @@ export function Footer() {
 
         <div className="border-t border-secondary-foreground/10 mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-secondary-foreground/60 text-xs">
           <p>
-            &copy; {new Date().getFullYear()} Chakra Biotech LLP. All rights
-            reserved.
+            &copy; {new Date().getFullYear()}{" "}
+            {companyData?.footer?.copyrightText ||
+              "Chakra Biotech LLP. All rights reserved."}
           </p>
           <div className="flex gap-6">
             <Link

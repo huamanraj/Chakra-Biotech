@@ -6,7 +6,7 @@ const companyDetailsSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   alternatePhone: { type: String },
   whatsappNumber: { type: String, required: true },
-  
+
   address: {
     street: String,
     city: String,
@@ -14,7 +14,7 @@ const companyDetailsSchema = new mongoose.Schema({
     country: String,
     zipCode: String
   },
-  
+
   socialMedia: {
     facebook: String,
     instagram: String,
@@ -22,7 +22,7 @@ const companyDetailsSchema = new mongoose.Schema({
     linkedin: String,
     youtube: String
   },
-  
+
   businessHours: {
     monday: String,
     tuesday: String,
@@ -32,11 +32,22 @@ const companyDetailsSchema = new mongoose.Schema({
     saturday: String,
     sunday: String
   },
-  
+
   aboutUs: { type: String },
   mission: { type: String },
   vision: { type: String },
-  
+
+  // Footer specific fields
+  footer: {
+    description: { type: String, default: 'An Agri-Tech leader specializing in precision-controlled aeroponic saffron cultivation. We are democratizing "Red Gold" through sustainable technology and innovation.' },
+    offerings: [{ type: String }],
+    quickLinks: [{
+      name: String,
+      href: String
+    }],
+    copyrightText: { type: String, default: 'Chakra Biotech LLP. All rights reserved.' }
+  },
+
   metaTitle: { type: String },
   metaDescription: { type: String },
   metaKeywords: [{ type: String }]

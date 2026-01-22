@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Routes
 app.use('/api/admin', require('./routes/authRoutes'));
+app.use('/api/admin/manage', require('./routes/admin/adminRoutes'));
 app.use('/api/admin/blog-categories', require('./routes/admin/blogCategoryRoutes'));
 app.use('/api/admin/blogs', require('./routes/admin/blogRoutes'));
 app.use('/api/admin/comments', require('./routes/admin/commentRoutes'));
