@@ -2,7 +2,7 @@
 
 Chakra Biotech LLP: Saffron Agri-Technology 
 
-## About the Company d
+## About the Company 
 
 **Chakra Biotech LLP** is an emerging Agri + Technology and Aeroponics based company in **Jaipur, Rajasthan**, focused on indoor aeroponic saffron cultivation.
 
